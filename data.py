@@ -11,7 +11,10 @@ all_data = pd.concat([data_1, data_2, data_3])
 
 
 ad = all_data[all_data['product'] == "pink morsel"]
-ad["sales"] = ad.apply(lambda row: f"${row['quantity'] * 3}", axis=1)
+ad["price"] = ad["price"].apply(lambda x: x.replace("$", ""))
+ad["price"] = ad["price"].astype(float)
+ad["sales"] = ad.apply(lambda row: f"${row['quantity'] * row['price']}", axis=1)
+
 ad.drop_duplicates()
 ad.drop(columns=["price", "quantity", "product"], inplace=True)
 ad.groupby("date").sum()
